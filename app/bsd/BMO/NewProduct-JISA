@@ -1,0 +1,163 @@
+This Document contains all information related to the new functionality around addition of a new product type named Junior Investment and Saving Account.
+
+Current available product types under a new member 
+
+When we add a new member under any advisor , they have the option to add any of the following product types - 
+
+ 1. GIA - Genral Investment Account
+ 2. TSA - Tax Saving Account
+ 3. Pensions Account 
+
+ Whenever we add a new member , we can search for the member and then add any of the above product types to it. 
+
+ We will now we able to also add Junior investment and savings account type along with above 3 types. 
+
+ What does each product type mean - 
+
+ 1. GIA - general investment Account 
+ This is a normal investment account and is taxed for all purchases and transactions
+
+ 2. TSA - tax saving Account 
+ There is no tax applied upto a limit of 20k pounds . The maximum limit for this product type is thus 20k pounds for every financial year
+
+ 3. Pension Account 
+ We make regular contributions to this account type for our future savings into the pension.
+
+ 4. JISA - Junior Investment and Savings Account 
+ This is similar to general investments account but has a upper limit of 10k pounds and is for teaching future investors which are currently in the age group of 12-18 years. 
+
+
+Below is the journey for onboarding a new member onto the platform - 
+
+1. Open the Admin site 
+2. Navigate to Admin tab 
+3. Select Member Setup and then individual member setup from the dropdown 
+4. Enter the member details and fill the necessary details in the next steps of the form 
+5. Submit the entered member details for authorisation 
+6. Logout from the current admin user session and login with a different admin account 
+7. Navigate to Admin tab 
+8. Select the Authorisations option and then select new member setup from the dropdown.
+9. You will see a list of all the members which are newly onboarded and needs authorisation.
+10. Choose your account and click on authorise next to the member name 
+11. You will see all the details entered by the first Admin and you can verify it and then click on Authorise. 
+12. You new member is created . You can note the member id displayed on the screen. 
+
+Below is the journey for adding a new product type to a member - 
+
+1. Open the member site 
+2. Navigate to client Search tab 
+3. Enter the member id or name in the search form and click on search 
+4. You will be redirected to member summary page where you can see the current product types of the member what holdings each of them has.
+3. Click on New product option 
+4. You will the available product types you can add amongst GIA,TSA, Pension Account and JISA.
+5. Choose the product type you want to add and click on next 
+6. Enter the necessary details in the form and click on submit 
+7. The new product type will added under that member 
+
+
+What are the important tables in the backend and what all details do they store - 
+
+Table name is in the following form - 
+
+<Database>.<Schema>.<TableName>
+
+
+Tables - 
+
+1. Accounts.dbo.Users table
+This Stores the details of all users on the platform, from admin users, advisors to all the members on the platform
+
+Columns - 
+clientId - type - INT - primary key 
+userName - type - VARCHAR(50) - stores the unique username of each user 
+userRole - type - INT - References to roleId of Accounts.dbo.UserRoles table and tells about the role of the user in the platform.
+dateCreated - type - DATETIME - the date member/admin/user was created/added to platform
+
+2. Accounts.dbo.UserRoles table
+This stores the various user roles available on the platform for authorisation purpose.
+
+Columns- 
+roleId - type - INT - primary key 
+roleDescription - type - VARCHAR(250) - description about the user role 
+
+3. Accounts.dbo.Members table
+This table stores the records only for the members created in the platform and not any other user type 
+
+Columns 
+memberId - type - INT - primary key 
+clientId - type - INT - refrence clientId of Account.dbo.Users table 
+memberName - type - VARCHAR(100) - name of the member
+dob - type - DATETIME - date of birth of the member 
+salary - type - INT - salary of the member 
+dateAdded - type - DATETIME - date added to the platform 
+phone - type - INT - contact number of the member 
+email - type - VARCHAR(50) - contact email address of the member 
+
+4. Accounts.dbo.MemberProducts table 
+Stores data about the different products under each member 
+
+Columns 
+memberProductid - type - INT - primary key 
+memberId - type - INT - references memberId of Account.dbo.Members table, defines the parent member under which the product is present
+memberProductCode - type - VARCHAR(50) - this is member id concatenated with product type like 3764-GIA , 4432-JISA 
+productType - type - VARCHAR(10) - this is the product type - JISA/GIA/TSA/Pensions
+productAddedDate - type - DATETIME - date on which product was added 
+
+
+
+Test Executions to test above functionalities 
+
+Test 1 - test to add new member into the platform 
+
+step1 - login to Admin site 
+expected result - You should see the home page after logging in 
+
+step2 - Navigate to Admin tab 
+expected result - you should see various options admins are authorised to do 
+
+step3 - select Member setup and then individual member setup 
+expected results - You should land on the new member setup page 
+
+step4 - enter all the member details and press submit 
+expected results - you will see a message that member is submitted for authorisation
+
+step5 - logout from current admin account and login back from another admin account 
+expected results - you will land on the home page 
+
+step6 - Navigate to Admin tab and then click on authorisations and select new member authoirsation 
+expected results - you will be navigated to member authoirsation page where all the new members pending authorisation will be displayed 
+
+step7 - select the account you just created to authorise 
+expected result - you will be navigated to a page will all the details of the member added by the previous admin user 
+
+step8 - Validate the data and click on authorise 
+expected result - member will be created and added to Account.dbo.Members table 
+
+
+Test 1 - test to add new product under a member
+
+step1 - login to Admin site 
+expected result - You should see the home page after logging in 
+
+step2 - Navigate to client search tab 
+expected result - you should be landed to member search page 
+
+step3 - search for the desired member
+expected results - you should see the member you want to add product to 
+
+step4 - select the member
+expected results - you should be naviagted to member summary page
+
+step5 - select the new product option 
+expected results - you will be navigated to add new product page and see available product types that can be added
+
+step6 - select the product type you want to add
+expected results - you will navigated to add product details page
+
+step7 - enter the necessary details for the product and click on submit
+expected results - your new product type will be added and record for it will be created under Accounts.dbo.MemberProducts table
+
+
+
+In the above utility , when we are creating a new product type in the platform just like JISA, the test case to test this should cover the above steps and also in the step where we get the options to select the available product types, we should see the option for JISA account too.
+In the similar way we can create test steps for adding any new kind of product type apart from GIA/JISA/Pension/TSA , just that we should be able to see the new product type in the page where we choose the product type and then we are able to complete the rest of the steps 
